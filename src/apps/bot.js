@@ -42,7 +42,7 @@ export const deleteWebhook = async () => {
 };
 
 export const startBot = async () => {
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === 'PRODUCTION') {
     await setupWebhook();
     console.log('Bot is running with webhook');
   } else {
