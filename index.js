@@ -4,7 +4,7 @@ import { startBot } from './src/apps/bot.js';
 const main = async () => {
   process.stdout.write('\x1Bc');
   await startBot();
-  if (process.env.VERCEL.URL) {
+  if (process.env.NODE_ENV == 'PRODUCTION') {
     console.log('production');
 
     startServer();
