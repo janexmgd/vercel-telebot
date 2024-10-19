@@ -21,7 +21,7 @@ export default function (bot) {
         });
         const videoBuffer = Buffer.from(response.data, 'binary');
         await ctx.deleteMessage(loadingId);
-        const caption = `Success download ${messageText} ${Date.now()}`;
+        const caption = `Success download ${Date.now()}`;
         await bot.telegram.sendVideo(
           ctx.chat.id,
           { source: videoBuffer },
@@ -44,7 +44,7 @@ export default function (bot) {
         }
         await ctx.deleteMessage(loadingId);
         const chunkArrMedia = chunkArr(arrMedia, 10);
-        const caption = `Success download ${messageText} ${Date.now()}`;
+        const caption = `Success download ${Date.now()}`;
         for (const chunk of chunkArrMedia) {
           await bot.telegram.sendMediaGroup(chatId, chunk, {
             caption: caption,
