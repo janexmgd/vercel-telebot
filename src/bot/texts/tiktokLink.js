@@ -1,6 +1,7 @@
 import ttsave from '../../utils/ttsave.js';
 import chunkArr from '../../helper/chunkArr.js';
 import axios from 'axios';
+
 export default function (bot) {
   bot.on('text', async (ctx, next) => {
     const chatId = ctx.chat.id;
@@ -11,46 +12,43 @@ export default function (bot) {
     if (matches) {
       const url = messageText;
       const data = await ttsave(url);
+      console.log(data);
 
       if (data.type == 'video') {
-        let loadingMessage = await ctx.reply(`Downloading tiktok video`);
+        let loadingMessage = await ctx.reply(`Downloading TikTok video`);
         const videoUrl = data.link.no_watermark || data.link.watermark;
         const loadingId = loadingMessage.message_id;
+
         const response = await axios.get(videoUrl, {
           responseType: 'arraybuffer',
         });
         const videoBuffer = Buffer.from(response.data, 'binary');
         await ctx.deleteMessage(loadingId);
         const caption = `Success download ${Date.now()}`;
+
         await bot.telegram.sendVideo(
-          ctx.chat.id,
+          chatId,
           { source: videoBuffer },
-          {
-            caption: caption,
-          }
+          { caption: caption }
         );
-      } else {
-        const loadingMessage = await ctx.reply('Downloading tiktok image');
+      } else if (data.type == 'image') {
+        const loadingMessage = await ctx.reply('Downloading TikTok image');
         const loadingId = loadingMessage.message_id;
         const arrMedia = [];
-        // console.log(data);
 
         for (const imageUrl of data.link) {
-          arrMedia.push({
-            media: { url: imageUrl },
-            type: 'photo',
-            parse_mode: 'HTML',
-          });
+          arrMedia.push({ media: imageUrl }); // Menyimpan URL gambar saja
         }
+
         await ctx.deleteMessage(loadingId);
         const chunkArrMedia = chunkArr(arrMedia, 10);
         const caption = `Success download ${Date.now()}`;
+
         for (const chunk of chunkArrMedia) {
-          await bot.telegram.sendMediaGroup(chatId, chunk, {
-            caption: caption,
-          });
-          ctx.reply(caption);
+          await bot.telegram.sendMediaGroup(chatId, chunk);
         }
+
+        await ctx.reply(caption);
       }
     }
     next();
