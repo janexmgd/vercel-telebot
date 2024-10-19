@@ -17,6 +17,15 @@ server.post(URI, async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+server.get('/', async (req, res) => {
+  try {
+    console.log('Incoming update:', req.body);
+    res.status(200).send('ok');
+  } catch (error) {
+    console.error('Error handling update:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 export const startServer = () => {
   server.listen(PORT, '0.0.0.0', () => {
