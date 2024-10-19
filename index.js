@@ -1,6 +1,7 @@
 import { startServer } from './src/apps/server.js';
 import { startBot } from './src/apps/bot.js';
-
+import { configDotenv } from 'dotenv';
+configDotenv();
 const main = async () => {
   process.stdout.write('\x1Bc');
   await startBot();
