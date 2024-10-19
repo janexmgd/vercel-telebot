@@ -2,7 +2,8 @@
 import { Telegraf } from 'telegraf';
 import axios from 'axios';
 import { configDotenv } from 'dotenv';
-import handleBot from '../utils/handleBot.js';
+import commands from '../bot/commands/index.js';
+import texts from '../bot/texts/index.js';
 configDotenv();
 
 const TELEGRAM_API = `https://api.telegram.org/bot${process.env.BOT_TOKEN}`;
@@ -15,7 +16,8 @@ if (!process.env.BOT_TOKEN) {
 }
 
 export const bot = new Telegraf(process.env.BOT_TOKEN);
-handleBot(bot);
+commands(bot);
+texts(bot);
 export const setupWebhook = async () => {
   try {
     const url = `${TELEGRAM_API}/setWebhook?url=${webhookURL}&drop_pending_updates=true`;
